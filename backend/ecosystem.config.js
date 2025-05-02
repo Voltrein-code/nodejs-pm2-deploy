@@ -1,28 +1,25 @@
 const dotenv = require('dotenv');
 
-dotenv.config({ path: './.env.deploy' });
+dotenv.config({ path: './env.deploy' });
 
 const {
-  SSH_USER, SSH_HOST, GIT_REF, GIT_REP, DESTINATION_PATH,
+  DEPLOY_REPOSITORY, DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH, DEPLOY_REF,
 } = process.env;
 
 module.exports = {
   apps: [{
+    name: 'mesto',
     script: 'dist/app.js',
-    instances: 'max',
-    exec_mode: 'cluster',
   }],
-
   deploy: {
     production: {
-      user: `${SSH_USER}`,
-      host: `${SSH_HOST}`,
-      ref: `${GIT_REF}`,
-      repo: `${GIT_REP}`,
-      path: `${DESTINATION_PATH}`,
-      key: '~/.ssh/practicum/private_key',
-      'pre-deploy-local': `bash scripts/deployEnv.sh ${SSH_USER}@${SSH_HOST} ${DESTINATION_PATH}`,
-      'post-deploy': 'cd backend && npm i && npm run build && pm2 startOrRestart ecosystem.config.js --env production',
+      user: DEPLOY_USER,
+      host: DEPLOY_HOST,
+      ref: DEPLOY_REF,
+      repo: DEPLOY_REPOSITORY,
+      path: DEPLOY_PATH,
+      'pre-deploy-local': `bash scripts/deployEnv.sh ${DEPLOY_USER}@${DEPLOY_HOST} ${DEPLOY_PATH}`,
+      'post-deploy': 'cd backend && pwd && npm ci && npm run build && pm2 startOrRestart ecosystem.config.js --env production',
     },
   },
 };
