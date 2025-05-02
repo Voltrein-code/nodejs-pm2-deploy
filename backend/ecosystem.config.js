@@ -20,6 +20,7 @@ module.exports = {
       ref: `${GIT_REF}`,
       repo: `${GIT_REP}`,
       path: `${DESTINATION_PATH}`,
+      key: '~/.ssh/practicum/private_key',
       'pre-deploy-local': `bash scripts/deployEnv.sh ${SSH_USER}@${SSH_HOST} ${DESTINATION_PATH}`,
       'post-deploy': 'cd backend && npm i && npm run build && pm2 startOrRestart ecosystem.config.js --env production',
     },
