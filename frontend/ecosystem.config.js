@@ -1,19 +1,20 @@
 const dotenv = require('dotenv');
+
 dotenv.config({ path: './.env.deploy' });
 
-const { SSH_USER, SSH_HOST, GIT_REF, GIT_REP, DESTINATION_PATH } = process.env;
+const {
+  DEPLOY_REPOSITORY, DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH, DEPLOY_REF,
+} = process.env;
 
 module.exports = {
-  apps: [],
-
   deploy: {
     production: {
-      user: `${SSH_USER}`,
-      host: `${SSH_HOST}`,
-      ref: `${GIT_REF}`,
-      repo: `${GIT_REP}`,
-      path: `${DESTINATION_PATH}`,
-      'post-deploy': 'cd frontend && npm i && npm run build '
-    }
-  }
+      user: DEPLOY_USER,
+      host: DEPLOY_HOST,
+      ref: DEPLOY_REF,
+      repo: DEPLOY_REPOSITORY,
+      path: DEPLOY_PATH,
+      'post-deploy': 'cd frontend && pwd && npm ci && npm i && npm run build',
+    },
+  },
 };
